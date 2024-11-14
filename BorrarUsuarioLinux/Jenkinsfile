@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'USER_ID', description: 'User ID (username) of the user to be removed')
+    }
+
+    stages {
+        stage('Remove User') {
+            steps {
+                script {
+                    def userId = params.USER_ID
+
+                    echo "Removing user with ID: ${userId}"
+
+                    // Command to remove the user and their home directory
+                    sh """
+                    sudo userdel -r ${userId}
+                    """
+                    
+                    echo "User ${userId} and their home directory have been removed."
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo "User removal pipeline completed."
+        }
+    }
+}
