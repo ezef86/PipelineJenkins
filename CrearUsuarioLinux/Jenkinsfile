@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'login: ', description: 'Login for the new user')
+        string(name: 'login', description: 'Login for the new user')
         string(name: 'nombreyapellido', description: 'Name and Last Name of the new user')
         choice(name: 'departamento', choices: ['contabilidad', 'finanzas', 'tecnología'], description: 'Department of the new user')
         booleanParam(name: 'ADD_TO_SUDO', defaultValue: false, description: 'Check to add the user to the sudo group')
