@@ -6,7 +6,7 @@ pipeline {
         text(name: 'Observaciones', defaultValue: '', description: 'Ingrese información relevante del usuario')
         booleanParam(name: 'sudo: ', defaultValue: false, description: 'Marque la casilla si el usuario tendrá permisos de usuario sudo')
         choice(name: 'Departamento: ', choices: ['Contabilidad', 'Finanzas', 'Tecnología'], description: 'Elija departamento ')
-        password(name: 'PASSWORD', defaultValue: '', description: 'Ingrese la contraseña inicial')
+        password(name: 'Contraseña:', defaultValue: '', description: 'Ingrese la contraseña inicial')
     }
     environment {
         // Variables de entorno
