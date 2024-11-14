@@ -2,9 +2,9 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'LOGIN', description: 'Login for the new user')
-        string(name: 'FULL_NAME', description: 'Name and Last Name of the new user')
-        choice(name: 'DEPARTMENT', choices: ['Accounting', 'Technology', 'Finance'], description: 'Department of the new user')
+        string(name: 'login: ', description: 'Login for the new user')
+        string(name: 'nombreyapellido', description: 'Name and Last Name of the new user')
+        choice(name: 'departamento', choices: ['contabilidad', 'finanzas', 'tecnología'], description: 'Department of the new user')
         booleanParam(name: 'ADD_TO_SUDO', defaultValue: false, description: 'Check to add the user to the sudo group')
     }
     
@@ -16,25 +16,25 @@ pipeline {
         stage('Create User') {
             steps {
                 echo "Creating user with details:"
-                echo "Username: ${params.LOGIN}"
-                echo "Full Name: ${params.FULL_NAME}"
-                echo "Department: ${params.DEPARTMENT.toLowerCase()}"
+                echo "Username: ${params.login}"
+                echo "Full Name: ${params.nombreyapellido}"
+                echo "Department: ${params.departamento.toLowerCase()}"
                 echo "Add to sudo group: ${params.ADD_TO_SUDO}"
                 
                 sh """
                     # Create the user with specified login, full name, and temporary password
-                    sh "sudo useradd -m -d /home/${params.LOGIN} -c '${params.FULL_NAME}' -s /bin/bash ${params.LOGIN}"
-                    echo "${params.LOGIN}:${TEMP_PASSWORD}" | sudo chpasswd
-                    sudo chage -d 0 ${params.LOGIN}   # Force password change at next login
+                    sh "sudo useradd -m -d /home/${params.login} -c '${params.nombreyapellido}' -s /bin/bash ${params.login}"
+                    echo "${params.login}:${TEMP_PASSWORD}" | sudo chpasswd
+                    sudo chage -d 0 ${params.login}   # Force password change at next login
                     
-                    # Add the user to the department group
-                    sudo usermod -aG ${params.DEPARTMENT.toLowerCase()} ${params.LOGIN}
+                    # Add the user to the departament group
+                    sudo usermod -aG ${params.departamento.toLowerCase()} ${params.login}
 
                     # Conditionally add the user to the sudo group
-                    ${params.ADD_TO_SUDO ? "sudo usermod -aG sudo ${params.LOGIN}" : ""}
+                    ${params.ADD_TO_SUDO ? "sudo usermod -aG sudo ${params.login}" : ""}
                 """
                 
-                echo "Temporary password for ${params.LOGIN}: ${env.TEMP_PASSWORD}"
+                echo "Temporary password for ${params.login}: ${env.TEMP_PASSWORD}"
             }
         }
     }
