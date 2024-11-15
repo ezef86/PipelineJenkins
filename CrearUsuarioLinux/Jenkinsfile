@@ -23,7 +23,7 @@ pipeline {
                 
                 sh """
                     # Create the user with specified login, full name, and temporary password
-                    sh "sudo useradd -m -c '${params.nombreyapellido}' -s /bin/bash ${params.login}"
+                    sudo useradd -m -c '${params.nombreyapellido}' -s /bin/bash ${params.login}
                     echo "${params.login}:${TEMP_PASSWORD}" | sudo chpasswd
                     sudo chage -d 0 ${params.login}   # Force password change at next login
                     
