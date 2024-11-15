@@ -1,32 +1,45 @@
 pipeline {
     agent any
-
     parameters {
-        string(name: 'USER_ID', description: 'User ID (username) of the user to be removed')
+        string(name: 'USER_UID', defaultValue: '', description: 'UID of the user to delete')
     }
-
     stages {
-        stage('Remove User') {
+        stage('List Users Before Deletion') {
             steps {
                 script {
-                    def userId = params.USER_ID
-
-                    echo "Removing user with ID: ${userId}"
-
-                    // Command to remove the user and their home directory
-                    sh """
-                    sudo userdel -r ${userId}
-                    """
-                    
-                    echo "User ${userId} and their home directory have been removed."
+                    sh "awk -F: '$3 >= 1000 && $3 < 60000 {print \$0}' /etc/passwd"
                 }
             }
         }
-    }
-    
-    post {
-        always {
-            echo "User removal pipeline completed."
+        stage('Delete User') {
+            steps {
+                script {
+                    def uid = params.USER_UID
+                    if (uid) {
+                        // Find the username and primary group
+                        def userInfo = sh(script: "getent passwd ${uid}", returnStdout: true).trim()
+                        def username = userInfo.split(':')[0]
+                        def primaryGroup = userInfo.split(':')[3]
+
+                        // Remove the user and their home directory
+                        sh "sudo userdel -r ${username}"
+
+                        // Remove the primary group
+                        sh "sudo groupdel ${primaryGroup}"
+
+                        echo "User ${username} and their primary group ${primaryGroup} have been deleted successfully"
+                    } else {
+                        echo "No UID provided"
+                    }
+                }
+            }
+        }
+        stage('List Users After Deletion') {
+            steps {
+                script {
+                    sh "awk -F: '$3 >= 1000 && $3 < 60000 {print \$0}' /etc/passwd"
+                }
+            }
         }
     }
 }
