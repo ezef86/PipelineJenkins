@@ -11,7 +11,6 @@ pipeline {
                     }
                 }
             }
-        }
         stage('Delete User') {
             steps {
                 script {
@@ -44,4 +43,3 @@ pipeline {
             }
         }
     }
-}
