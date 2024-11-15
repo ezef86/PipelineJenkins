@@ -22,11 +22,17 @@ pipeline {
                         def primaryGroup = userInfo.split(':')[3]
 
                         // Remove the user and their home directory
-                        sh "sudo userdel -r ${username}"
-
+                        try {
+                            sh "sudo userdel -r ${username}"
+                        } catch (Exception e) {
+                            echo "Failed to delete user ${username}: ${e.message}"
+                        }
                         // Remove the primary group
-                        sh "sudo groupdel ${primaryGroup}"
-
+                        try {
+                            sh "sudo groupdel ${primaryGroup}"
+                        } catch (Exception e) {
+                            echo "Failed to delete group ${primaryGroup}: ${e.message}"
+                        }
                         echo "User ${username} and their primary group ${primaryGroup} have been deleted successfully"
                     } else {
                         echo "No UID provided"
