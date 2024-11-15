@@ -7,7 +7,7 @@ pipeline {
         stage('List Users Before Deletion') {
             steps {
                 script {
-                    sh "awk -F: '$3 >= 1000 && $3 < 60000 {print $0}' /etc/passwd"
+                    sh "awk -F: '\\\$3 >= 1000 && \\\$3 < 60000 {print \\\$0}' /etc/passwd"
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
         stage('List Users After Deletion') {
             steps {
                 script {
-                    sh "awk -F: '$3 >= 1000 && $3 < 60000 {print $0}' /etc/passwd"
+                    sh "awk -F: '\\\$3 >= 1000 && \\\$3 < 60000 {print \\\$0}' /etc/passwd"
                 }
             }
         }
