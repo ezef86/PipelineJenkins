@@ -45,7 +45,7 @@ pipeline {
                 echo "El usuario '${params.nombre}, ${params.apellido}' fue creado exitosamente."
                 echo "El login del usuario es: ${params.login} y el grupo asignado es ${params.departamento}"
                 echo "La contraseña temporal para el usuario con login: ${params.login} es: ${env.TEMP_PASSWORD}"
-                ${params.ADD_TO_SUDO ? "echo "El usuario se agregó al grupo sudo "" : "echo "El usuario no está agregado al grupo sudo""}
+                echo params.ADD_TO_SUDO ? "El usuario se agregó al grupo sudo " : "El usuario no está agregado al grupo sudo"
         }
         aborted {
             echo "El proceso de creación de usuario fue abortado."
