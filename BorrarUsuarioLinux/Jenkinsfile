@@ -7,6 +7,7 @@ pipeline {
         stage('Lista de usuarios antes de remover') {
             steps {
                 script {
+                    echo "Lista de usuarios antes de remover al usuario: "
                     sh 'awk -F: \'$3 >= 1000 && $3 < 60000 {print $0}\' /etc/passwd' 
                     }
                 }
@@ -39,8 +40,6 @@ pipeline {
                         } catch (Exception e) {
                         echo "No se pudo eliminar al usuario ${username}: ${e.message}"
                         }
-                        // Agrego delay por error de jenkins al borrar grupo primario
-                        sh "sleep 2"
                         // Remover el grupo primario
                         try {
                         sh "sudo groupdel ${primaryGroupName}"
@@ -57,6 +56,7 @@ pipeline {
         stage('Lista de usuarios luego de remover: ') {
             steps {
                 script {
+                    echo "Lista de usuarios luego de remover el usuario: "
                     sh 'awk -F: \'$3 >= 1000 && $3 < 60000 {print $0}\' /etc/passwd' 
                     }
                 }
