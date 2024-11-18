@@ -24,7 +24,7 @@ pipeline {
                 echo "Agregar al grupo sudo: ${params.ADD_TO_SUDO}"
                 
                 sh """
-                    # Crear al usuario con el login, nombre y apellido y la contraseña temporal:
+                    # Crear al usuario con el login, datos personales y contraseña temporal:
                     sudo useradd -m -c '${params.nombre} ${params.apellido}, ${params.departamento}' -s /bin/bash ${params.login}
                     echo "${params.login}:${TEMP_PASSWORD}" | sudo chpasswd
                     # Forzar el cambio de contraseña en el siguiente login:
