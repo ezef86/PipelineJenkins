@@ -39,6 +39,8 @@ pipeline {
                         } catch (Exception e) {
                         echo "No se pudo eliminar al usuario ${username}: ${e.message}"
                         }
+                        // Agrego delay por error de jenkins al borrar grupo primario
+                        sh "sleep 2"
                         // Remover el grupo primario
                         try {
                         sh "sudo groupdel ${primaryGroupName}"
