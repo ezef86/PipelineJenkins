@@ -1,46 +1,55 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'USER_UID', defaultValue: '', description: 'UID of the user to delete')
+        string(name: 'USER_UID', defaultValue: '', description: 'UID del usuario Linux a remover: ')
     }
     stages {
-        stage('List Users Before Deletion') {
+        stage('Lista de usuarios antes de remover') {
             steps {
                 script {
                     sh 'awk -F: \'$3 >= 1000 && $3 < 60000 {print $0}\' /etc/passwd' 
                     }
                 }
             }
-        stage('Delete User') {
+        stage('Remover usuario') {
             steps {
                 script {
-                    def uid = params.USER_UID
-                    if (uid) {
-                        // Find the username and primary group
-                        def userInfo = sh(script: "getent passwd ${uid}", returnStdout: true).trim()
+                    if (params.USER_UID) {
+                        // Encuentra el nombre de usuario y el grupo primario en base al UID:
+                        def userInfo = sh(script: "getent passwd ${params.USER_UID}", returnStdout: true).trim()
                         def username = userInfo.split(':')[0]
                         def primaryGroup = userInfo.split(':')[3]
-
-                        // Remove the user and their home directory
-                        try {
-                            sh "sudo userdel -r ${username}"
+                        // Verifica si el usuario está dentro del grupo sudo y de ser verdadero lo quita:
+                        def userInSudoGroup = sh(script: "getent group sudo | grep -w ${username}", returnStatus: true) == 0 
+                        if (userInSudoGroup) { 
+                            try {
+                            sh "sudo deluser ${username} sudo" 
+                            echo "User ${username} removed from sudo group" 
+                        } else { 
+                            echo "User ${username} is not in the sudo group" }
                         } catch (Exception e) {
                             echo "Failed to delete user ${username}: ${e.message}"
                         }
-                        // Remove the primary group
+                        // Remover al usuario y su directorio HOME con manejo de excepciones:
+                        try {
+                            sh "sudo userdel -r -f ${username}"
+                        } catch (Exception e) {
+                            echo "No se pudo eliminar al usuario ${username}: ${e.message}"
+                        }
+                        // Remover el grupo primario
                         try {
                             sh "sudo groupdel ${primaryGroup}"
                         } catch (Exception e) {
-                            echo "Failed to delete group ${primaryGroup}: ${e.message}"
+                            echo "No se pudo eliminar el grupo ${primaryGroup}: ${e.message}"
                         }
-                        echo "User ${username} and their primary group ${primaryGroup} have been deleted successfully"
+                        echo "El usuario ${username} y su grupo primario ${primaryGroup} fueron removidos exitosamente"
                     } else {
-                        echo "No UID provided"
+                        echo "No se proporcionó UID"
                     }
                 }
             }
         }
-        stage('List Users After Deletion') {
+        stage('Lista de usuarios luego de remover: ') {
             steps {
                 script {
                     sh 'awk -F: \'$3 >= 1000 && $3 < 60000 {print $0}\' /etc/passwd' 
