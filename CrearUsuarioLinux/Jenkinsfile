@@ -2,10 +2,11 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'login', description: 'Login for the new user')
-        string(name: 'nombreyapellido', description: 'Name and Last Name of the new user')
-        choice(name: 'departamento', choices: ['contabilidad', 'finanzas', 'tecnología'], description: 'Department of the new user')
-        booleanParam(name: 'ADD_TO_SUDO', defaultValue: false, description: 'Check to add the user to the sudo group')
+        string(name: 'login', description: 'Elija un nombre de usuario para login: ')
+        string(name: 'nombre', description: 'Nombre del nuevo usuario: ')
+        string(name: 'apellido', description: 'Apellido del nuevo usuario: ')
+        choice(name: 'departamento', choices: ['contabilidad', 'finanzas', 'tecnología'], description: 'Departamento del nuevo usuario: ')
+        booleanParam(name: 'ADD_TO_SUDO', defaultValue: false, description: 'Seleccionar si el usuario tendrá privilegios de sudo: ')
     }
     
     environment {
@@ -13,35 +14,44 @@ pipeline {
     }
     
     stages {
-        stage('Create User') {
+        stage('Crear usuario') {
             steps {
-                echo "Creating user with details:"
-                echo "Username: ${params.login}"
-                echo "Full Name: ${params.nombreyapellido}"
-                echo "Department: ${params.departamento.toLowerCase()}"
-                echo "Add to sudo group: ${params.ADD_TO_SUDO}"
+                echo "Creando al usuario con los siguientes datos: "
+                echo "login: ${params.login}"
+                echo "Nombre: ${params.nombre}"
+                echo "Apellido: ${params.apellido}"
+                echo "Departamento: ${params.departamento.toLowerCase()}"
+                echo "Agregar al grupo sudo: ${params.ADD_TO_SUDO}"
                 
-                sh """
-                    # Create the user with specified login, full name, and temporary password
-                    sudo useradd -m -c '${params.nombreyapellido}' -s /bin/bash ${params.login}
+                script {
+                    # Crear al usuario con el login, nombre y apellido y la contraseña temporal:
+                    sudo useradd -m -c '${params.nombre}, ${params.apellido}' -s /bin/bash ${params.login}
                     echo "${params.login}:${TEMP_PASSWORD}" | sudo chpasswd
-                    sudo chage -d 0 ${params.login}   # Force password change at next login
+                    # Forzar el cambio de contraseña en el siguiente login:
+                    sudo chage -d 0 ${params.login}   
                     
-                    # Add the user to the departament group
+                    # Agregar al usuario al grupo del departamento correspondiente:
                     sudo usermod -aG ${params.departamento.toLowerCase()} ${params.login}
 
-                    # Conditionally add the user to the sudo group
+                    # Agregar al usuario al grupo sudo si corresponde:
                     ${params.ADD_TO_SUDO ? "sudo usermod -aG sudo ${params.login}" : ""}
-                """
-                
-                echo "Temporary password for ${params.login}: ${env.TEMP_PASSWORD}"
+                }
             }
         }
     }
     
     post {
-        always {
-            echo "User creation pipeline completed."
+        success {
+                echo "El usuario '${params.nombre}, ${params.apellido}' fue creado exitosamente."
+                echo "El login del usuario es: ${params.login} y el grupo asignado es ${params.departamento}"
+                echo "La contraseña temporal para el usuario con login: ${params.login} es: ${env.TEMP_PASSWORD}"
+                ${params.ADD_TO_SUDO ? echo "El usuario se agregó al grupo sudo " : echo "El usuario no está agregado al grupo sudo"}
+        }
+        aborted {
+            echo "El proceso de creación de usuario fue abortado."
+        }
+        failure {
+            echo "Hubo un error inesperado"
         }
     }
 }
