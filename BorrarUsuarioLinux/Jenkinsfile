@@ -18,7 +18,8 @@ pipeline {
                         // Encuentra el nombre de usuario y el grupo primario en base al UID:
                         def userInfo = sh(script: "getent passwd ${params.USER_UID}", returnStdout: true).trim()
                         def username = userInfo.split(':')[0]
-                        def primaryGroup = userInfo.split(':')[3]
+                        def primaryGroupID = userInfo.split(':')[3]
+                        def primaryGroupName = sh(script: "getent group ${primaryGroupID} | cut -d: -f1", returnStdout: true).trim()
                         // Verifica si el usuario está dentro del grupo sudo y de ser verdadero lo quita:
                         def userInSudoGroup = sh(script: "getent group sudo | grep -w ${username}", returnStatus: true) == 0 
                         if (userInSudoGroup) { 
@@ -40,11 +41,11 @@ pipeline {
                         }
                         // Remover el grupo primario
                         try {
-                        sh "sudo groupdel ${primaryGroup}"
+                        sh "sudo groupdel ${primaryGroupName}"
                         } catch (Exception e) {
-                        echo "No se pudo eliminar el grupo ${primaryGroup}: ${e.message}"
+                        echo "No se pudo eliminar el grupo ${primaryGroupName}: ${e.message}"
                         }
-                        echo "El usuario ${username} y su grupo primario ${primaryGroup} fueron removidos exitosamente"
+                        echo "El usuario ${username} y su grupo primario ${primaryGroupName} fueron removidos exitosamente"
                     } else {
                         echo "No se proporcionó UID"
                     }
