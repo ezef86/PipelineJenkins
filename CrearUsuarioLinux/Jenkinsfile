@@ -23,7 +23,7 @@ pipeline {
                 echo "Departamento: ${params.departamento.toLowerCase()}"
                 echo "Agregar al grupo sudo: ${params.ADD_TO_SUDO}"
                 
-                script {
+                sh """
                     # Crear al usuario con el login, nombre y apellido y la contraseña temporal:
                     sudo useradd -m -c '${params.nombre}, ${params.apellido}' -s /bin/bash ${params.login}
                     echo "${params.login}:${TEMP_PASSWORD}" | sudo chpasswd
@@ -35,7 +35,7 @@ pipeline {
 
                     # Agregar al usuario al grupo sudo si corresponde:
                     ${params.ADD_TO_SUDO ? "sudo usermod -aG sudo ${params.login}" : ""}
-                }
+                """
             }
         }
     }
