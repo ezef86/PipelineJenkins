@@ -25,22 +25,24 @@ pipeline {
                             try {
                             sh "sudo deluser ${username} sudo" 
                             echo "User ${username} removed from sudo group" 
-                        } else { 
-                            echo "User ${username} is not in the sudo group" }
-                        } catch (Exception e) {
+                            } catch (Exception e) {
                             echo "Failed to delete user ${username}: ${e.message}"
+                            }
+                        } else { 
+                        echo "User ${username} is not in the sudo group"
                         }
+                           
                         // Remover al usuario y su directorio HOME con manejo de excepciones:
                         try {
-                            sh "sudo userdel -r -f ${username}"
+                        sh "sudo userdel -r -f ${username}"
                         } catch (Exception e) {
-                            echo "No se pudo eliminar al usuario ${username}: ${e.message}"
+                        echo "No se pudo eliminar al usuario ${username}: ${e.message}"
                         }
                         // Remover el grupo primario
                         try {
-                            sh "sudo groupdel ${primaryGroup}"
+                        sh "sudo groupdel ${primaryGroup}"
                         } catch (Exception e) {
-                            echo "No se pudo eliminar el grupo ${primaryGroup}: ${e.message}"
+                        echo "No se pudo eliminar el grupo ${primaryGroup}: ${e.message}"
                         }
                         echo "El usuario ${username} y su grupo primario ${primaryGroup} fueron removidos exitosamente"
                     } else {
