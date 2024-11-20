@@ -51,7 +51,7 @@ Estos pipelines declarativos de Jenkins automatizan la creación y eliminación 
 
 <img src="img\build-with-params-2.png" alt="jenkins-snapshot-2" width="75%"/> <br><br>
 
-### En la consola de Linux se puede verificar que el usuario ha sido removiso del sistema: <br><br>
+### En la consola de Linux se puede verificar que el usuario ha sido removido del sistema: <br><br>
 
   <img src="img\deleted-user-cli.png" alt="cli-deleted-user-cli" width="75%"/>
 
