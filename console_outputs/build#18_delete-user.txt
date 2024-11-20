@@ -1,0 +1,95 @@
+Started by user Ezequiel Foressi
+Obtained BorrarUsuarioLinux/Jenkinsfile from git https://github.com/ezef86/PipelineJenkins.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/develop-pipeline/EliminarUsuariosLinux
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/develop-pipeline/EliminarUsuariosLinux/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/ezef86/PipelineJenkins.git # timeout=10
+Fetching upstream changes from https://github.com/ezef86/PipelineJenkins.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+ > git fetch --tags --force --progress -- https://github.com/ezef86/PipelineJenkins.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 20c25332f406ddcfa243a823249d66bb5a58ee40 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 20c25332f406ddcfa243a823249d66bb5a58ee40 # timeout=10
+Commit message: "Actualizo usuario README"
+ > git rev-list --no-walk c202825141807555020a0edae526458a3a40bf8d # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Lista de usuarios antes de remover)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+Lista de usuarios antes de remover al usuario: 
+[Pipeline] sh
++ awk -F: $3 >= 1000 && $3 < 60000 {print $0} /etc/passwd
+ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash
+devops:x:1001:1003:DevOps Educacionit,Cordoba:/home/devops:/bin/bash
+fpaez:x:1003:1007:Fito Paez, tecnología:/home/fpaez:/bin/bash
+jperez:x:1004:1008:Juan Perez, finanzas:/home/jperez:/bin/bash
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Remover usuario)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ getent passwd 1004
+[Pipeline] sh
++ getent group 1008
++ cut -d: -f1
+[Pipeline] sh
++ getent group sudo
++ grep -w jperez
+[Pipeline] echo
+User jperez is not in the sudo group
+[Pipeline] sh
++ sudo userdel -r -f jperez
+userdel: user jperez is currently used by process 1966
+userdel: jperez mail spool (/var/mail/jperez) not found
+[Pipeline] sh
++ sudo groupdel jperez
+groupdel: group 'jperez' does not exist
+[Pipeline] echo
+No se pudo eliminar el grupo jperez: script returned exit code 6
+[Pipeline] echo
+El usuario jperez y su grupo primario jperez fueron removidos exitosamente
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Lista de usuarios luego de remover: )
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+Lista de usuarios luego de remover el usuario: 
+[Pipeline] sh
++ awk -F: $3 >= 1000 && $3 < 60000 {print $0} /etc/passwd
+ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash
+devops:x:1001:1003:DevOps Educacionit,Cordoba:/home/devops:/bin/bash
+fpaez:x:1003:1007:Fito Paez, tecnología:/home/fpaez:/bin/bash
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

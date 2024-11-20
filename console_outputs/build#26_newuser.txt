@@ -1,0 +1,75 @@
+Started by user Ezequiel Foressi
+Obtained CrearUsuarioLinux/Jenkinsfile from git https://github.com/ezef86/PipelineJenkins.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/develop-pipeline/NuevosUsuariosLinux
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/develop-pipeline/NuevosUsuariosLinux/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/ezef86/PipelineJenkins.git # timeout=10
+Fetching upstream changes from https://github.com/ezef86/PipelineJenkins.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+ > git fetch --tags --force --progress -- https://github.com/ezef86/PipelineJenkins.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 20c25332f406ddcfa243a823249d66bb5a58ee40 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 20c25332f406ddcfa243a823249d66bb5a58ee40 # timeout=10
+Commit message: "Actualizo usuario README"
+ > git rev-list --no-walk c202825141807555020a0edae526458a3a40bf8d # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ openssl rand -base64 12
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Crear usuario)
+[Pipeline] echo
+Creando al usuario con los siguientes datos: 
+[Pipeline] echo
+login: jperez
+[Pipeline] echo
+Nombre: Juan
+[Pipeline] echo
+Apellido: Perez
+[Pipeline] echo
+Departamento: finanzas
+[Pipeline] echo
+Agregar al grupo sudo: false
+[Pipeline] sh
++ sudo useradd -m -c Juan Perez, finanzas -s /bin/bash -d /home/jperez jperez
++ + echo jperez:HHNqepjhuOjibwDl
+sudo chpasswd
++ sudo chage -d 0 jperez
++ sudo usermod -aG finanzas jperez
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+El usuario 'Juan, Perez' fue creado exitosamente.
+[Pipeline] echo
+El login del usuario es: jperez y el grupo asignado es finanzas
+[Pipeline] echo
+La contraseña temporal para el usuario con login: jperez es: HHNqepjhuOjibwDl
+[Pipeline] echo
+El usuario no está agregado al grupo sudo
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
