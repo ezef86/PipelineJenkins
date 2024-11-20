@@ -25,7 +25,7 @@ Estos pipelines declarativos de Jenkins automatizan la creación y eliminación 
 
 - Agregar la siguiente línea debajo del usuario root y guardar: <br><br>
 
-<img src="img\sudo-visudo-edit.png" alt="sudo-visudo-edit-cli" width="40%"/>
+<img src="img/sudo-visudo-edit.png" alt="sudo-visudo-edit-cli" width="40%"/>
 
 ## **Descripción General del Pipeline de Nuevos Usuarios**
 
@@ -37,13 +37,13 @@ Estos pipelines declarativos de Jenkins automatizan la creación y eliminación 
 - **DEPARTAMENTO**: Departamento (opciones: `Contabilidad`, `Tecnología`, `Finanzas`).
 - **ADD_TO_SUDO**: Booleano para asignar privilegios de sudo. <br><br>
 
-  <img src="img\build-with-params-1.png" alt="jenkins-snapshot-1" width="75%"/> <br><br>
+  <img src="img/build-with-params-1.png" alt="jenkins-snapshot-1" width="75%"/> <br><br>
 
-  ### [Ver mensajes de consola de salida ](console_outputs\build26_newuser.txt)
+  ### [Ver mensajes de consola de salida ](console_outputs/build26_newuser.txt)
 
   ### En la consola de Linux se puede verificar el usuario creado: <br><br>
 
-  <img src="img\new-user-cli-login.png" alt="cli-login" width="75%"/>
+  <img src="img/new-user-cli-login.png" alt="cli-login" width="75%"/>
 
 ## **Descripción General del Pipeline de Eliminar Usuarios**
 
@@ -51,13 +51,13 @@ Estos pipelines declarativos de Jenkins automatizan la creación y eliminación 
 
 - **USER_UID**: Número de identificador del usuario a remover. <br><br>
 
-<img src="img\build-with-params-2.png" alt="jenkins-snapshot-2" width="75%"/> <br><br>
+<img src="img/build-with-params-2.png" alt="jenkins-snapshot-2" width="75%"/> <br><br>
 
-### [Ver mensajes de consola de salida ](console_outputs\build18_delete-user.txt)
+### [Ver mensajes de consola de salida ](console_outputs/build18_delete-user.txt)
 
 ### En la consola de Linux se puede verificar que el usuario ha sido removido del sistema: <br><br>
 
-  <img src="img\deleted-user-cli.png" alt="cli-deleted-user-cli" width="75%"/>
+  <img src="img/deleted-user-cli.png" alt="cli-deleted-user-cli" width="75%"/>
 
 ### **<u>Manejo de Errores</u>**
 
