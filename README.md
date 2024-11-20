@@ -39,6 +39,8 @@ Estos pipelines declarativos de Jenkins automatizan la creación y eliminación 
 
   <img src="img\build-with-params-1.png" alt="jenkins-snapshot-1" width="75%"/> <br><br>
 
+  ### [Ver mensajes de consola de salida ](console_outputs\build#26_newuser.txt)
+
   ### En la consola de Linux se puede verificar el usuario creado: <br><br>
 
   <img src="img\new-user-cli-login.png" alt="cli-login" width="75%"/>
@@ -50,6 +52,8 @@ Estos pipelines declarativos de Jenkins automatizan la creación y eliminación 
 - **USER_UID**: Número de identificador del usuario a remover. <br><br>
 
 <img src="img\build-with-params-2.png" alt="jenkins-snapshot-2" width="75%"/> <br><br>
+
+### [Ver mensajes de consola de salida ](console_outputs\build#18_delete-user.txt)
 
 ### En la consola de Linux se puede verificar que el usuario ha sido removido del sistema: <br><br>
 
