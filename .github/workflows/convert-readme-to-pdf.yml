@@ -1,10 +1,10 @@
 name: Convert README to PDF
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+#  push:
+#    branches:
+#      - main
+#  workflow_dispatch:
 
 jobs:
   convert-to-pdf:
