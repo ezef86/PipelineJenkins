@@ -20,7 +20,7 @@ jobs:
       - name: Convert README.md to PDF
         run: |
           mkdir -p build
-          pandoc README.md -o build/README.pdf --pdf-engine=pdflatex
+          pandoc README.md -o build/README.pdf --pdf-engine=pdflatex --from markdown+raw_html
       - name: Upload PDF
         uses: actions/upload-artifact@v3
         with:
